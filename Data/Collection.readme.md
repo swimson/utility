@@ -42,7 +42,7 @@ The Latest Version
 ------------------
 
 Details of the latest version can be found on the at the GitHub page    
-http://github.com/swimson/collection.  
+http://github.com/swimson/Utility/Collection.  
 
 
 Code Examples:
