@@ -1,6 +1,4 @@
-<?php
-
-namespace Swimson\Utility\Data;
+<?php namespace Swimson\Utility\Data;
 
 class Collection {
     
@@ -25,10 +23,10 @@ class Collection {
     
     /* private properties */
     private $collection = array();
-    private $validator = null;
-    private $errorHandler = null;
-    private $formatFunction = null;
-    
+    private $validator;
+    private $errorHandler;
+    private $formatFunction;
+
     // options
     private $optionMuteAllErrors = false;
     private $optionPreventOverwrites = false;
@@ -194,6 +192,7 @@ class Collection {
     /* returns an array with the collection elements */
     public function toArray($associativeArray=true)
     {
+        $return = null;
         if($associativeArray){
             $return = $this->collection;
         } else {
@@ -235,6 +234,7 @@ class Collection {
     /* debugger */
     public function debug($echo = true, $break = "\r\n")
     {
+        $typeStr = null;
         $return = $break.$break."Collection: ".$break;
         foreach($this->collection as $key=>$elmt){
             $type = $this->detType($elmt);
@@ -284,6 +284,8 @@ class Collection {
         }
         if ($echo) {
             echo $return;
+
+            return null;
         } else {
             return $return;
         }
@@ -342,7 +344,6 @@ class Collection {
     /* validate an element */
     public function validate($elmt)
     {
-        $return = false;
         if($this->validator){
             try {
                 // check if entry is valid
@@ -372,7 +373,7 @@ class Collection {
     /* determines the type of the element */
     private function detType($thing)
     {
-        
+        $return = null;
         if (is_object($thing)) {
             if(get_class($thing)=='Closure'){
                 $return = self::C_CLOSURE;
