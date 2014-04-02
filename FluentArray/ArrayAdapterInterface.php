@@ -1,5 +1,5 @@
 <?php
-namespace Swimson\Utility\FluentObject;
+namespace Swimson\Utility\FluentArray;
 
 interface ArrayAdapterInterface
 {
