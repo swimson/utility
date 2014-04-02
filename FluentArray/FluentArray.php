@@ -1,84 +1,57 @@
 <?php
-namespace Swimson\Utility\FluentArray;
 
-class FluentArray implements ArrayAdapterInterface
+namespace Swimson\Utility\ObjectForge;
+
+use ArrayAccess;
+use Iterator;
+
+class FluentArray extends FluentObject implements ArrayAccess, Iterator
 {
 
-    private $nodes = array();
-
-    public function __construct($nodes = array())
+    public function offsetExists($key)
     {
-        if ($nodes instanceof ArrayAdapterInterface) {
-            $nodes = $nodes->toArray();
-        }
-        if (is_array($nodes)) {
-            foreach ($nodes as $name => $value) {
-                $this->createNode($name, $value);
-            }
-        }
+        return $this->nodeExists($key);
     }
 
-    public function __get($name)
+    public function offsetUnset($key)
     {
-        if (!array_key_exists($name, $this->nodes)) {
-            $this->createNode($name, array());
-        }
-
-        return $this->nodes[$name];
+        $this->deleteNode($key);
     }
 
-    public function __set($name, $value)
+    public function offsetGet($key)
     {
-        if (is_null($value)) {
-            $this->deleteNode($name);
-        } else {
-            $this->createNode($name, $value);
-        }
+        return $this->__get($key);
     }
 
-    private function deleteNode($name)
+    public function offsetSet($key, $value)
     {
-        if (isset($this->nodes[$name])) {
-            unset($this->nodes[$name]);
-        }
+        $this->__set($key, $value);
     }
 
-    private function createNode($name, $value)
+    public function current()
     {
-        if (is_array($value)) {
-            $this->nodes[$name] = $this->createComplexNode($value);
-        } elseif (is_object($value)) {
-            if ($value instanceof ArrayAdapterInterface) {
-                $this->nodes[$name] = $this->createComplexNode($value->toArray());
-            } else {
-                $this->nodes[$name] = $this->createSimpleNode($value);
-            }
-        } else {
-            $this->nodes[$name] = $this->createSimpleNode($value);
-        }
+        return $this->nodeCurrent();
     }
 
-    private function createComplexNode($value = array())
+    public function key()
     {
-        return new FluentArray($value);
+        return $this->nodeKey();
     }
 
-    private function createSimpleNode($value)
+    public function next()
     {
-        return $value;
+        $this->nodeNext();
     }
 
-    public function toArray()
+    public function rewind()
     {
-        $return = array();
-        foreach ($this->nodes as $name => $value) {
-            if (get_class($value) == get_class($this)) {
-                $return[$name] = $value->toArray();
-            } else {
-                $return[$name] = $value;
-            }
-        }
-
-        return $return;
+        $this->nodeRewind();
     }
-}
+
+    public function valid()
+    {
+        return $this->offsetExists($this->key());
+    }
+
+
+} 
